@@ -1,0 +1,53 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Broker Group - Iniciar Sesión</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+
+   <div class="login-container">
+        <div class="logo-container">
+            <img src="{% static 'img/logo11.png' %}" alt="Broker Group Logo">
+        </div>
+
+        {% if not user.is_authenticated %}
+            <h2>Bienvenido a la Plataforma de Gestión de Documentos de Broker Group</h2>
+            
+            {% if form.errors or request.GET.error %}
+                <div class="error-msg">
+                    Usuario o contraseña incorrectos.
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{% url 'panel_cliente' %}">
+                
+                <div class="form-group">
+                    <label>Usuario</label>
+                    <input type="text" name="username" placeholder="Ingresa tu usuario" required>
+                </div>
+                
+                <div class="form-group">
+                    <label>Contraseña</label>
+                    <input type="password" name="password" placeholder="••••••••" required>
+                </div>
+                
+                <button type="submit" class="btn-login">Entrar</button>
+            </form>
+        {% else %}
+            <h2>Bienvenido, {{ user.username }}</h2>
+            <p style="margin-bottom: 20px;">Ya tienes una sesión activa.</p>
+            <a href="{% url 'panel_cliente' %}" class="btn-login" style="display: block; text-decoration: none;">Ir a mis patentes</a>
+            <br>
+            <form action="{% url 'logout' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" style="background: none; border: none; color: #666; cursor: pointer; text-decoration: underline;">Cerrar Sesión</button>
+            </form>
+        {% endif %}
+    </div>
+</body>
+</html>

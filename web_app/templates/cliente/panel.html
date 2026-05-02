@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Broker Group - Panel del Cliente</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body style="display: block;"> <!-- Sobreescribimos el flex del body del home si es necesario -->
+    
+    <div class="dashboard-container">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <h1 class="section-title">Mis Patentes</h1>
+            <a href="{% url 'home' %}" style="color: #666; text-decoration: none;">← Volver</a>
+        </div>
+
+        <div class="card" style="background: #fdfdfd; padding: 20px; border-radius: 10px; border: 1px solid #eee;">
+            <h3 style="margin-bottom: 15px;">Subir Nueva Patente</h3>
+            <form method="post" enctype="multipart/form-data" class="form-group">
+                {% csrf_token %}
+                <!-- Renderizamos los campos del form manualmente para que hereden el estilo del CSS -->
+                {% for field in form %}
+                    <div style="margin-bottom: 15px;">
+                        <label style="display:block; margin-bottom:5px;">{{ field.label }}</label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button type="submit" class="btn-login" style="width: auto; padding: 10px 25px;">Subir PDF</button>
+            </form>
+        </div>
+
+        <hr style="margin: 30px 0; border: 0; border-top: 1px solid #eee;">
+
+        <h3 class="section-title">Estado de mis solicitudes</h3>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Patente</th>
+                    <th>Estado</th>
+                    <th>PDF</th>
+                    <th>QR</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for p in mis_patentes %}
+                <tr>
+                    <td><strong>{{ p.numero_patente }}</strong></td>
+                    <td>
+                        <span class="badge estado-{{ p.estado }}">
+                            {{ p.get_estado_display }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="{{ p.pdf_documento.url }}" class="btn-view" target="_blank">📄 Ver PDF</a>
+                    </td>
+                    <td>
+                        {% if p.qr_imagen %}
+                            <img src="{{ p.qr_imagen.url }}" width="45" style="border-radius: 5px; border: 1px solid #ddd;">
+                        {% else %}
+                            <small style="color: #999;">Pendiente</small>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 30px; color: #999;">
+                        Aún no has registrado ninguna patente.
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

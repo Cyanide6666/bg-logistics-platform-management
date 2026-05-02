@@ -1,0 +1,155 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    /* Usando el degradado de tu login anterior */
+    background: linear-gradient(135deg, #eeeae1 5%, rgba(0, 0, 0, 0.2) 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-container {
+    background: white;
+    padding: 90px;
+    border-radius: 15px;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+}
+
+.logo-container {
+    margin-bottom: 50px;
+    max-width: 550px;
+}
+
+.logo-container img {
+    max-width: 300px;
+    height: auto;
+}
+
+h2 {
+    color: #4a4a4a;
+    margin-bottom: 25px;
+    font-weight: 600;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: #666;
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+    border-color: #75ceec;
+}
+
+.btn-login {
+    width: 100%;
+    padding: 12px;
+    background: #0016a2;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.btn-login:hover {
+    background: #08a3f0;
+}
+
+.error-msg {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+/* Estilos para el Panel del Cliente */
+.dashboard-container {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    width: 90%;
+    max-width: 900px;
+    margin: 20px auto;
+}
+
+.section-title {
+    color: #000000;
+    border-bottom: 2px solid #cccccc;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+/* Tabla Estilizada */
+.custom-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.custom-table th {
+    background-color: #f8f9fa;
+    color: #666;
+    padding: 12px;
+    text-align: left;
+    border-bottom: 2px solid #eee;
+}
+
+.custom-table td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+/* Badges para el estado */
+.badge {
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.estado-pendiente { background: #ffeeba; color: #856404; }
+.estado-aprobado { background: #d4edda; color: #155724; }
+.estado-rechazado { background: #f8d7da; color: #721c24; }
+
+/* Botón de acción en tabla */
+.btn-view {
+    color: #75daec;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.btn-view:hover { text-decoration: underline; }
