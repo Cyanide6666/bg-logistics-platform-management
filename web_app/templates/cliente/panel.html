@@ -53,13 +53,17 @@
                     <td>
                         <a href="{{ p.pdf_documento.url }}" class="btn-view" target="_blank">📄 Ver PDF</a>
                     </td>
-                    <td>
-                        {% if p.qr_imagen %}
-                            <img src="{{ p.qr_imagen.url }}" width="45" style="border-radius: 5px; border: 1px solid #ddd;">
-                        {% else %}
-                            <small style="color: #999;">Pendiente</small>
-                        {% endif %}
-                    </td>
+                    <!-- En tu archivo panel.html -->
+<td>
+    {% if p.qr_imagen %}
+        <!-- Añadimos el enlace para abrir en pestaña nueva -->
+        <a href="{{ p.qr_imagen.url }}" target="_blank">
+            <img src="{{ p.qr_imagen.url }}" width="60" style="border-radius: 5px; border: 1px solid #ddd; cursor: pointer;" title="Clic para ampliar QR">
+        </a>
+    {% else %}
+        <small style="color: #999;">Pendiente</small>
+    {% endif %}
+</td>
                 </tr>
                 {% empty %}
                 <tr>
