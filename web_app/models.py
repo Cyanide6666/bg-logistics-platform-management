@@ -1,11 +1,12 @@
 import qrcode
+import os
 from io import BytesIO
 from PIL import Image, ImageDraw, ImageFont
 from django.core.files import File
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.conf import settings # Para traer el DOMAIN que pusimos arriba
+from django.conf import settings
 
 class Patente(models.Model):
     ESTADOS = [
@@ -35,17 +36,18 @@ class Patente(models.Model):
         super().save(*args, **kwargs)
 
     def generar_qr_con_texto(self):
-        # 1. Creamos la URL dinámica usando el dominio de settings[cite: 6, 7]
+        # 1. Creamos la URL dinámica usando el DOMAIN de settings
+        # Apuntamos a la vista de detalle de la patente en tu web
         dominio = getattr(settings, 'DOMAIN', 'http://127.0.0.1:8000')
-        url_archivo = f"{dominio}{self.pdf_documento.url}"
+        url_archivo = f"{dominio}/ver-patente/{self.id}"
 
-        # 2. Generar el código QR básico[cite: 6]
+        # 2. Generar el código QR básico
         qr = qrcode.QRCode(version=1, box_size=10, border=4)
         qr.add_data(url_archivo)
         qr.make(fit=True)
         qr_img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
 
-        # 3. Preparar el lienzo con espacio extra abajo para la patente
+        # 3. Preparar el lienzo con espacio extra abajo para el texto de la patente
         ancho, alto = qr_img.size
         margen_texto = 60
         imagen_final = Image.new('RGB', (ancho, alto + margen_texto), 'white')
@@ -54,9 +56,9 @@ class Patente(models.Model):
         # 4. Dibujar el número de patente abajo
         draw = ImageDraw.Draw(imagen_final)
         
-        # Intentamos cargar fuentes comunes (Windows o Linux)[cite: 6]
+        # Intentamos cargar fuentes comunes (Windows o Linux)
         try:
-            # En Windows 'arial.ttf', en Linux 'DejaVuSans.ttf'
+            # En Render (Linux) se suele usar esta ruta o DejaVuSans
             font = ImageFont.truetype("arial.ttf", 26) 
         except:
             font = ImageFont.load_default()
@@ -69,7 +71,10 @@ class Patente(models.Model):
         
         draw.text((pos_x, alto - 5), texto, fill="black", font=font)
 
-        # 5. Guardar en el campo ImageField (compatible con local y Firebase)[cite: 6, 7]
+        # 5. Guardar en el campo ImageField (Sirv o Local)
         buffer = BytesIO()
         imagen_final.save(buffer, format='PNG')
-        self.qr_imagen.save(f"qr_{self.numero_patente}.png", File(buffer), save=False)
+        nombre_archivo = f"qr_{self.numero_patente}.png"
+        
+        # save=False para evitar bucles infinitos dentro del save()
+        self.qr_imagen.save(nombre_archivo, File(buffer), save=False)

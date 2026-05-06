@@ -6,9 +6,11 @@ from .models import Patente
 def home(request):
     return render(request, 'home.html')
 
+# views.py
 @login_required
 def panel_cliente(request):
-    mis_patentes = Patente.objects.filter(cliente=request.user)
+    # El signo - antes de fecha_subida ordena de forma descendente
+    mis_patentes = Patente.objects.filter(cliente=request.user).order_by('-fecha_subida')
 
     if request.method == 'POST':
         form = PatenteForm(request.POST, request.FILES) 

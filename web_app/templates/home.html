@@ -10,11 +10,14 @@
 
    <div class="login-container">
         <div class="logo-container">
-            <img src="{% static 'img/logo11.png' %}" alt="Broker Group Logo">
+            <a href="https://www.brokergroup.cl" target="_blank">
+                <img src="{% static 'img/logo11.png' %}" alt="Broker Group Logo">
+            </a>
+            <h3><i>Digitalizamos tus documentos para que nunca dejes de operar</i></h3>
         </div>
 
         {% if not user.is_authenticated %}
-            <h2>Bienvenido a la Plataforma de Gestión de Documentos de Broker Group</h2>
+            <h2>¡Bienvenido a la Plataforma!</h2>
             
             {% if form.errors or request.GET.error %}
                 <div class="error-msg">

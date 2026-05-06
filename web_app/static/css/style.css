@@ -41,6 +41,12 @@ h2 {
     font-weight: 600;
 }
 
+h3 {
+    color: #4a4a4a;
+    margin-top: 15px;
+    font-weight: 400;
+}
+
 .form-group {
     margin-bottom: 20px;
     text-align: left;
