@@ -1,8 +1,13 @@
 import os
 from pathlib import Path
 import dj_database_url
-import json
-from google.oauth2 import service_account
+from pathlib import Path
+from dotenv import load_dotenv  # <--- Esta librería es la magia
+
+# Carga las variables del archivo .env
+load_dotenv() 
+
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -12,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-hgnaf+gmk=v$w=f)=crauj6gf+xq1jdg2ij#1&nvz(^xxo2o&q'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -74,8 +79,7 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Neon DB
 DATABASES = {
     'default': dj_database_url.config(
-        default='postgresql://neondb_owner:npg_9P4pmFZANRfw@ep-polished-cloud-aprowmse.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require'
-    )
+        default=os.environ.get('DATABASE_URL')    )
 }
 
 
@@ -143,30 +147,25 @@ if os.environ.get('RENDER'):
 else:
     DOMAIN = 'http://127.0.0.1:8000'
 
-# CONFIGURACIÓN DE FIREBASE STORAGE
-if not DEBUG:  # Esto se activa cuando estés en Render
-    # Intentamos leer la variable de entorno que crearemos en Render
-    firebase_json = os.environ.get('FIREBASE_JSON_DATA')
+# CONFIGURACIÓN DE ALMACENAMIENTO (SIRV via S3)
+if os.environ.get('RENDER'):
+    # Configuramos Sirv para la nube
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_ENDPOINT_URL = 'https://s3.sirv.com'
     
-    if firebase_json:
-        info = json.loads(firebase_json)
-        GS_CREDENTIALS = service_account.Credentials.from_service_account_info(info)
-        DEFAULT_FILE_STORAGE = 'storages.backends.gcloud.GoogleCloudStorage'
-        GS_BUCKET_NAME = 'tu-proyecto.appspot.com' # <--- CAMBIA ESTO POR TU BUCKET
-        
-        # Esto es para que los archivos sean públicos y se puedan ver con el QR
-        GS_DEFAULT_ACL = 'publicRead' 
+    # Esto indica a Django que use Sirv en lugar del disco duro
+    DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+    
+    # Para que los links sean públicos (necesario para el QR)
+    AWS_QUERYSTRING_AUTH = False
+    AWS_DEFAULT_ACL = 'public-read'
 else:
-    # En tu PC local, sigue usando la carpeta media normal
+    # En tu PC local (localhost), seguimos usando la carpeta media
     MEDIA_URL = '/media/'
     MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-# Configuración de Sirv (vía S3)
-AWS_ACCESS_KEY_ID = 'contacto@brokergroup.cl'
-AWS_SECRET_ACCESS_KEY = 'cZoRi4MGlbv4j22I7KPrBmFo3s8A15wUkyXdboXjpPZug7n7'
-AWS_STORAGE_BUCKET_NAME = 'brokergroup'
-AWS_S3_ENDPOINT_URL = 'https://s3.sirv.com'
-AWS_S3_REGION_NAME = 'eu-west-1' # Sirv suele usar esta por defecto
 
 # Para que los archivos se suban a Sirv y no a tu PC
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
