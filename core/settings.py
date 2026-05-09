@@ -138,6 +138,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Si existe la variable RENDER, estamos en la nube, si no, estamos local.
 if os.environ.get('RENDER'):
     DOMAIN = f"https://{os.environ.get('RENDER_EXTERNAL_HOSTNAME')}"
+elif os.environ.get('APP_DOMAIN'): # Esta es la de DigitalOcean
+    DOMAIN = f"https://{os.environ.get('APP_DOMAIN')}"
 else:
     DOMAIN = 'http://127.0.0.1:8000'
 
