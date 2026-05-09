@@ -28,6 +28,14 @@ render_host = os.environ.get('RENDER_EXTERNAL_HOSTNAME')
 if render_host:
     ALLOWED_HOSTS.append(render_host)
 
+# Si estás en DigitalOcean, esta variable se llama APP_DOMAIN, así que la agregamos también
+do_host = os.environ.get('APP_DOMAIN') 
+if do_host:
+    ALLOWED_HOSTS.append(do_host)
+
+# Dominio personalizado
+ALLOWED_HOSTS.append('brokerflow.cl')
+
 
 # Application definition
 
